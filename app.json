@@ -1,0 +1,29 @@
+{
+  "id": "7c7292f2-e434-4bfb-9c23-cc1ac39cd3eb",
+  "name": "PayAp",
+  "publisher": "Aplica Technologies",
+  "version": "1.0.0.2",
+  "description": "HR & Payroll",
+  "dependencies": [],
+  "logo": "./logo/aplicalogo.jpg",
+  "platform": "1.0.0.0",
+  "application": "20.0.0.0",
+  "features": [
+    "TranslationFile"
+  ],
+  "brief": "PayAp",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 60200
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": false
+  },
+  "contextSensitiveHelpUrl": "https://aplica.com/",
+  "runtime": "8.1",
+  "target": "OnPrem"
+}
