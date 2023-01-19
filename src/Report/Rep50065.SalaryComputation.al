@@ -12,6 +12,8 @@ report 50065 "Salary Computation"
             DataItemTableView = SORTING("No.");
 
             trigger OnPreDataItem()
+            var
+                EmployeeL: Record Employee;
             begin
                 SalaryCountG := 0;
                 Employee.SetFilter("No.", EmployeeNoG);
@@ -32,6 +34,10 @@ report 50065 "Salary Computation"
                 SalaryComputationHeaderG."To Date" := PayCycleLineG."Period End Date";
                 SalaryComputationHeaderG.Status := SalaryComputationHeaderG.Status::Open;
                 SalaryComputationHeaderG."Created DateTime" := CurrentDateTime();
+                if EmployeeL.Get(Employee."No.") then begin
+                    EmployeeL."Last Salary Paid Pate" := Today;
+                    EmployeeL.Modify();
+                end;
                 SalaryComputationHeaderG.TestField("Pay Period");
                 SalaryComputationHeaderG.TestField("From Date");
                 SalaryComputationHeaderG.TestField("To Date");
@@ -302,7 +308,7 @@ report 50065 "Salary Computation"
                         begin
                             PayCycleLineG.SetCurrentKey("Period Start Date");
                             PayCycleLineG.SetRange("Pay Cycle", PayCycleG);
-                            PayCycleLineG.SetRange(Status, PayCycleLineG.Status::Open);
+                            //PayCycleLineG.SetRange(Status, PayCycleLineG.Status::Open);
                             if Page.RunModal(0, PayCycleLineG) = Action::LookupOK then
                                 PayPeriodG := PayCycleLineG."Pay Period";
                         end;

@@ -22,7 +22,11 @@ page 60176 "ESS Role Center"
                 part(Part; "Employee Leave Chart")
                 {
                     ApplicationArea = All;
-
+                }
+                part(EmpDirectory; "Employee Directory")
+                {
+                    ApplicationArea = suite;
+                    Editable = false;
                 }
             }
         }
@@ -47,6 +51,18 @@ page 60176 "ESS Role Center"
                 ApplicationArea = All;
                 Caption = 'Leave Request';
                 RunObject = page "Leave Request List";
+            }
+            action(DocumentRequest)
+            {
+                ApplicationArea = All;
+                Caption = 'Document Request';
+                RunObject = page "Document Requests";
+            }
+            action("Loans&Advances")
+            {
+                ApplicationArea = All;
+                Caption = 'Outstanding Loans & Advances';
+                RunObject = page "Loan Request List";
             }
         }
     }

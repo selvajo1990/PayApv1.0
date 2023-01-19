@@ -3,6 +3,7 @@ table 50038 "Loan Request"
     DataClassification = CustomerContent;
     Caption = 'Loan Request';
     LookupPageId = "Loan Request List";
+    //Created by SKR 17-01-2023
 
     fields
     {
@@ -146,12 +147,24 @@ table 50038 "Loan Request"
             DataClassification = CustomerContent;
             Caption = 'Amount';
             trigger OnValidate()
+            var
+                EmpLevelEarning: Record "Employee Level Earning"; //SKR 17-01-2023
             begin
                 ValidateHeaderInfo();
                 TestField("Requested date");
                 IsPayPeriodClosed("Requested date", "Employee No.", '');
                 if "No. of Instalment" > 0 then
                     Validate("No. of Instalment");
+                //SKR 17-01-2023
+                if Rec."Loan Type" = 'SA' then begin
+                    EmpLevelEarning.Reset();
+                    EmpLevelEarning.SetRange("Employee No.", Rec."Employee No.");
+                    EmpLevelEarning.SetRange("Earning Code", 'Gross');
+                    if EmpLevelEarning.FindLast() then
+                        if Rec.Amount > EmpLevelEarning."Pay Amount" then
+                            Error('Salary Advance Cannot be greater than the monthly Gross Salary');
+                    //SKR 17-01-2023
+                end;
             end;
         }
         field(6; "No. of Instalment"; Integer)
@@ -259,6 +272,18 @@ table 50038 "Loan Request"
         {
             DataClassification = CustomerContent;
             Caption = 'End of Service';
+        }
+        field(18; "Outstanding Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Outstanding Amount';
+        }
+        field(19; Status; Option)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Status';
+            OptionMembers = "Open","Pending Approval","Approved","Rejected";
+            OptionCaption = 'Open,Pending Approval,Approved,Rejected';
         }
     }
 

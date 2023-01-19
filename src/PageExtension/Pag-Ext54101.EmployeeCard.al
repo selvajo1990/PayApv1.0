@@ -110,9 +110,19 @@ pageextension 54101 "Employee Card" extends "Employee Card"
                 ToolTip = 'Specifies the value of the Line Manager Name';
                 ShowMandatory = true;
             }
+            field("HR Manager"; "HR Manager")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the HR Manager';
+            }
+            field("HR Manager Name"; "HR Manager Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the HR Manager Name';
+            }
         }
         // suganya-aplica
-        moveafter("Line Manager Name"; Gender)
+        moveafter("HR Manager Name"; Gender)
         moveafter(Gender; "Company E-Mail")
         moveafter("Company E-Mail"; "Last Date Modified")
         movebefore("Company E-Mail"; "Phone No.2")
@@ -261,6 +271,11 @@ pageextension 54101 "Employee Card" extends "Employee Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Last Salary Paid Date';
+                }
+                field("Last Salary Increment Date"; "Last Salary Increment Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Last Salary Increment Date';
                 }
             }
             group("Pay Ap")
@@ -659,7 +674,7 @@ pageextension 54101 "Employee Card" extends "Employee Card"
         NoOfYears: Integer;
         NoOfMonths: Integer;
     //TotalMonths: Integer;
-    //CurrentDateL: Integer;
+    //CurrentDateL: InFteger;
     //EmployementDateL: Integer;
     //DateFormatLbl: Label '<Year4><Month,2><Day,2>';
     begin

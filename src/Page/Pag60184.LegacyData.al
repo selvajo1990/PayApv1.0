@@ -4,7 +4,7 @@ page 60184 "Legacy Data"
     ApplicationArea = All;
     UsageCategory = Administration;
     SourceTable = "Legacy Data";
-    Editable = false;
+    //Editable = false;
 
     layout
     {
@@ -98,6 +98,73 @@ page 60184 "Legacy Data"
                 }
             }
         }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Create Journal")
+            {
+                ApplicationArea = All;
+                Image = Journal;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    recGenJnlLine: Record "Gen. Journal Line";
+                    recGenJnlBatch: Record "Gen. Journal Batch";
+                    recGeneralLdgSetup: Record "General Ledger Setup";
+                    recEmployeeLegacy: Record "Legacy Data";
+                    recEmployee: Record Employee;
+                    recBankAcc: Record "Bank Account";
+                    cduNoseries: Codeunit NoSeriesManagement;
+                begin
+                    if Confirm('Do you want to create Journal ?') then begin
+                        recEmployeeLegacy.Reset();
+                        if recEmployeeLegacy.FindSet() then
+                            repeat
+                                recGenJnlLine.Init();
+                                recGenJnlLine."Journal Template Name" := 'GENERAL';
+                                recGenJnlLine."Journal Batch Name" := 'DEFAULT';
+                                recGenJnlLine."Line No." += 10000;
+                                recGenJnlLine."Posting Date" := WorkDate();
+                                recGenJnlLine.Validate("Posting Date");
+                                recGenJnlLine."Document Type" := recGenJnlLine."Document Type"::Payment;
+                                recGenJnlLine.Validate("Document Type");
+
+                                recGenJnlBatch.Reset();
+                                recGenJnlBatch.SetRange("Journal Template Name", 'GENERAL');
+                                recGenJnlBatch.SetRange(Name, 'DEFAULT');
+                                if recGenJnlBatch.FindFirst() then
+                                    recGenJnlLine."Document No." := cduNoseries.GetNextNo(recGenJnlBatch."No. Series", Today, true);
+
+                                recGenJnlLine."Account Type" := recGenJnlLine."Account Type"::"Bank Account";
+                                if recEmployee.Get(recEmployeeLegacy."Employee Code") then begin
+                                    recGenJnlLine."Account No." := recEmployee."Bank Name";
+                                    recGenJnlLine.Validate("Account No.");
+                                end;
+
+                                if recBankAcc.Get(recEmployee."Bank Name") then begin
+                                    recGenJnlLine."Currency Code" := recBankAcc."Currency Code";
+                                    recGenJnlLine.Validate("Currency Code");
+                                end;
+                                recGenJnlLine."Bal. Account Type" := recGenJnlLine."Bal. Account Type"::Employee;
+                                recGenJnlLine."Bal. Account No." := recEmployeeLegacy."Employee Code";
+                                recGenJnlLine.Validate("Bal. Account No.");
+                                recGenJnlLine.Amount := (-1) * recEmployeeLegacy."NET WPS";
+                                recGenJnlLine.Validate(Amount);
+                                recGenJnlLine."Shortcut Dimension 1 Code" := recEmployeeLegacy."Cost Center";
+                                recGenJnlLine.Validate("Shortcut Dimension 1 Code");
+                                recGenJnlLine.Insert();
+                            until recEmployeeLegacy.Next() = 0;
+                        Message('Journal lines are Inserted.');
+                    end;
+                end;
+            }
+        }
+
+
     }
 
     var

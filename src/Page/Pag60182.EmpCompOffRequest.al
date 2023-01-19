@@ -10,7 +10,7 @@ page 60182 "Employee Comp Off Requests"
     {
         area(Content)
         {
-            group(GroupName)
+            repeater(GroupName)
             {
                 field("Entry No."; "Entry No.")
                 {

@@ -84,7 +84,7 @@ table 50062 "Employee Level Earning"
                     EmployeeEarningGroupL.SetRange("Group Code", Rec."Group Code");
                     EmployeeEarningGroupL.SetRange("Earning Code", "Earning Code");
                     EmployeeEarningGroupL.SetRange("From Date", "From Date"); // New
-                    if not EmployeeEarningGroupL.IsEmpty() then
+                    if EmployeeEarningGroupL.FindFirst() then
                         Error(SameEarningCodeErr, EmployeeEarningGroupL.FieldCaption("Earning Code"));
                 end;
             end;
@@ -325,6 +325,7 @@ table 50062 "Employee Level Earning"
                     FilterL += '|' + EmployeeLevelEarningL."Earning Code";
                 if TempEarningG.Get(EmployeeLevelEarningL."Base Code") then
                     AmountP := TempEarningG."Pay Amount";
+
                 EmployeeLevelEarningL."Pay Amount" := Round(AmountP * EmployeeLevelEarningL."Pay Percentage" / 100, HrSetupL."HR Rounding Precision", HrSetupL.RoundingDirection());
                 EmployeeLevelEarningL.Modify();
                 if not TempEarningG.Get(EmployeeLevelEarningL."Earning Code") then begin

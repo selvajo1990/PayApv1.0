@@ -193,6 +193,35 @@ tableextension 54103 "Human Resources Setup" extends "Human Resources Setup"
             DataClassification = CustomerContent;
             Caption = 'HR Manager';
             TableRelation = Employee where(Manager = const(true));
+
+            trigger OnValidate()
+            var
+                EmployeeL: Record Employee;
+            begin
+                if EmployeeL.Get(Rec."HR Manager") then
+                    Rec."HR Manager Name" := EmployeeL.FullName();
+
+                EmployeeL.Reset();
+                EmployeeL.SetFilter("HR Manager", '<>%1', Rec."HR Manager");
+                if EmployeeL.FindSet() then
+                    repeat
+                        EmployeeL."HR Manager" := Rec."HR Manager";
+                        EmployeeL."HR Manager Name" := Rec."HR Manager Name";
+                        EmployeeL.Modify();
+                    until EmployeeL.Next() = 0;
+            end;
+        }
+        field(60029; "HR Manager Name"; Text[50])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'HR Manager Name';
+            Editable = false;
+        }
+        field(60030; "Document Req No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Document Rq No.';
+            TableRelation = "No. Series";
         }
 
     }

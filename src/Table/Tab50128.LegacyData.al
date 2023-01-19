@@ -16,6 +16,16 @@ table 50128 "Legacy Data"
         field(3; "Employee Code"; Code[20])
         {
             DataClassification = ToBeClassified;
+            /*trigger OnValidate()
+            var
+                recEmployee: Record Employee;
+            begin
+                if recEmployee.Get("Employee Code") then
+                    "Employee Name" := recEmployee.FullName()
+                else
+                    Error('Please enter valid Employee No. - %1', "Employee Code");
+
+            end;*/
         }
         field(4; "Employee Name"; Text[100])
         {
@@ -24,14 +34,48 @@ table 50128 "Legacy Data"
         field(5; "MOL Code"; Code[50])
         {
             DataClassification = ToBeClassified;
+            /*trigger OnValidate()
+            var
+                recEmployee: Record Employee;
+            begin
+                Clear(recEmployee);
+                recEmployee.SetRange(recEmployee."No.", "Employee Code");
+                recEmployee.SetRange("MOL ID", "MOL Code");
+                if not recEmployee.FindFirst() then
+                    Error('MOL ID is incorrect.');
+
+            end;*/
         }
         field(6; "Employee Bank Name"; Code[50])
         {
             DataClassification = ToBeClassified;
+
+            /* trigger OnValidate()
+             var
+                 recEmployee: Record Employee;
+             begin
+                 Clear(recEmployee);
+                 recEmployee.SetRange(recEmployee."No.", "Employee Code");
+                 recEmployee.SetRange("Bank Name", "Employee Bank Name");
+                 if not recEmployee.FindFirst() then
+                     Error('Employee Bank Name is incorrect.');
+             end;*/
         }
         field(7; IBAN; Code[50])
         {
             DataClassification = ToBeClassified;
+
+            /* trigger OnValidate()
+             var
+                 recEmployee: Record Employee;
+             begin
+                 Clear(recEmployee);
+                 recEmployee.SetRange(recEmployee."No.", "Employee Code");
+                 recEmployee.SetRange(IBAN, IBAN);
+                 if not recEmployee.FindFirst() then
+                     Error('IBAN is incorrect.');
+
+             end;*/
         }
         field(8; Attendance; Integer)
         {
@@ -113,7 +157,7 @@ table 50128 "Legacy Data"
     }
 
     var
-        myInt: Integer;
+        recEarningCode: Record Earning;
 
     trigger OnInsert()
     begin

@@ -20,6 +20,7 @@ page 60157 "Salary Increment"
                     trigger OnAssistEdit()
                     begin
                         Rec.AssistEdit();
+                        rec."Document Date" := Today;
                     end;
                 }
                 field("Document Date"; Rec."Document Date")
@@ -32,10 +33,27 @@ page 60157 "Salary Increment"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Effective Date';
                 }
+                field("Employee No."; rec."Employee No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Employee No.';
+
+                }
+                field("Employee Name"; rec."Employee Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of Employee Name';
+                    Editable = false;
+                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Status';
+                }
+                field("Approver Name"; rec."Approver Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Approved Name';
                 }
                 field("Approved Date"; Rec."Approved Date")
                 {

@@ -6,7 +6,7 @@ page 60185 "Weekly Off"
     SourceTable = "Weekly Off";
     SourceTableView = where(Updated = filter(false));
     DelayedInsert = true;
-
+    Caption = 'Update Week Off';
 
     layout
     {
@@ -41,9 +41,28 @@ page 60185 "Weekly Off"
     {
         area(Processing)
         {
+            action("Export to Excel")
+            {
+                ApplicationArea = all;
+                RunObject = xmlport "Export Week Off";
+                Image = Export;
+            }
+            action("Import From Excel")
+            {
+                ApplicationArea = all;
+                RunObject = xmlport "Import Week Off";
+                Image = Import;
+
+                trigger OnAction()
+                begin
+                    CurrPage.Update();
+                end;
+            }
             action("Update WeekOff")
             {
                 ApplicationArea = All;
+                Image = UpdateShipment;
+
 
                 trigger OnAction()
                 begin

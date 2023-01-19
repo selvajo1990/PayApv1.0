@@ -77,6 +77,7 @@ page 50060 "Loan Card"
                     {
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the Amount';
+                        Visible = false;
                     }
                 }
                 field("Minimum Tenure Formula"; Rec."Minimum Tenure Formula")
@@ -89,6 +90,7 @@ page 50060 "Loan Card"
                     ApplicationArea = All;
                     Editable = Rec."End of Service" = false;
                     ToolTip = 'Specifies the value of the No. of Instalment';
+                    Visible = false;
                 }
                 field("Allow in Notice Period"; Rec."Allow in Notice Period")
                 {

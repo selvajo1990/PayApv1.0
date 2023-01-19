@@ -83,6 +83,11 @@ page 50062 "Loan Request Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Instalment Amount';
                 }
+                field("Outstanding Amount"; "Outstanding Amount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Outstanding Amount';
+                }
                 field(Notes; Rec.Notes)
                 {
                     ApplicationArea = All;
@@ -98,5 +103,13 @@ page 50062 "Loan Request Card"
             }
         }
     }
+    var
+        UserSetup: Record "User Setup";
 
+    trigger OnOpenPage()
+    begin
+        if UserSetup.Get(UserId) and UserSetup."Is ESS User" then begin
+            CurrPage.Editable := false;
+        end;
+    end;
 }

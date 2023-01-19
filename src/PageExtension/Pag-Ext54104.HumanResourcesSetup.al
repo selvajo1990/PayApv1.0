@@ -64,6 +64,11 @@ pageextension 54104 "Human Resources Setup" extends "Human Resources Setup"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the OT Nos.';
             }
+            field("Document Req No."; "Document Req No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Document Request No.';
+            }
         }
         addbefore(Numbering)
         {
@@ -124,6 +129,11 @@ pageextension 54104 "Human Resources Setup" extends "Human Resources Setup"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the HR Manger';
+                }
+                field("HR Manager Name"; "HR Manager Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the HR Manager Name';
                 }
             }
         }

@@ -166,7 +166,7 @@ table 50026 "Earning"
             DataClassification = CustomerContent;
             Caption = 'Minimum Duration';
         }
-        field(23; "Applicable for OT"; Boolean)
+        /*field(23; "Applicable for OT"; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'Applicable for OT';
@@ -180,7 +180,7 @@ table 50026 "Earning"
         {
             DataClassification = CustomerContent;
             Caption = 'OT% for Holidays';
-        }
+        }*/
     }
     keys
     {

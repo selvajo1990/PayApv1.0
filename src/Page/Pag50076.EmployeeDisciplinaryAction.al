@@ -42,15 +42,15 @@ page 50076 "Employee Disciplinary Action"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Occurance No.';
                 }
-                field("HR Comment"; Rec."HR Comment")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the HR Comment';
-                }
                 field("Line Manager Comment"; "Line Manager Comment")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Line Manager Comment';
+                }
+                field("HR Comment"; Rec."HR Comment")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the HR Comment';
                 }
             }
         }

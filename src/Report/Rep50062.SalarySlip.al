@@ -149,7 +149,7 @@ report 50062 "Salary Slip"
                         FinalCount2G -= 1;
                         if FinalCount2G = 0 then begin
                             CheckG.InitTextVariable();
-                            CheckG.FormatNoText(AmountinWordsG, TotalEarningAmtG - TotalDeductionAmtG, 'AED');
+                            CheckG.FormatNoText(AmountinWordsG, Round(TotalEarningAmtG - TotalDeductionAmtG), 'AED');
                             NoofPaidLeaveDaysG := SalaryComputationLineLeaveDaysG."No. of Paid Leave Days";
                             NoofUnPaidLeaveDaysG := SalaryComputationLineLeaveDaysG."No. of UnPaid Leave Days";
                             NoofWorkingDaysG := SalaryComputationLineLeaveDaysG."No. of Working Days";
@@ -300,6 +300,7 @@ report 50062 "Salary Slip"
                             SubGradeL.TestField("Pay Cycle");
                             PayCycleG := SubGradeL."Pay Cycle";
                             PayCycleLineG.SetCurrentKey("Period Start Date");
+                            //PayCycleLineG.SetRange(Status, PayCycleLineG.Status::Closed); //SKR 18-01-2023
                             PayCycleLineG.SetRange("Pay Cycle", SubGradeL."Pay Cycle");
                             if Page.RunModal(0, PayCycleLineG) = Action::LookupOK then
                                 PayPeriodG := PayCycleLineG."Pay Period";
@@ -366,7 +367,7 @@ report 50062 "Salary Slip"
         PaySlipMonthG: Text;
         DescriptionG: Text;
         DeductionDescriptionG: Text;
-        AmountinWordsG: array[1] of Text;
+        AmountinWordsG: array[1] of Text[80];
         ChangeCompanyG: Boolean;
         AnnualLeaveCountG: Decimal;
         PasswordG: Text[20];

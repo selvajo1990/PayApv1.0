@@ -1,7 +1,11 @@
 codeunit 50023 "Human Resource Events"
 {
     EventSubscriberInstance = StaticAutomatic;
-    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::LogInManagement, 'OnAfterLogInStart', '', true, true)]
+    trigger OnRun()
+    begin
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::LogInManagement, 'OnAfterLogInStart', '', true, true)]
     local procedure OnAfterLogInStart()
     var
         UserSetup: Record "User Setup";
@@ -13,8 +17,7 @@ codeunit 50023 "Human Resource Events"
 
         EmpLogin.LookupMode(true);
         if not (EmpLogin.RunModal() = Action::LookupOK) then;
-    end;*/
-
+    end;
 
     [EventSubscriber(ObjectType::Table, 5200, 'OnAfterValidateEvent', 'Birth Date', true, true)]
     local procedure Employee_OnAfterValidateEvent_BirthDate(var Rec: Record Employee)
@@ -126,6 +129,8 @@ codeunit 50023 "Human Resource Events"
         EOSL: Record "End of Service";
         InstalmentLine: Record "Instalment Detail";
         SalaryComputationLine: Record "Salary Computation Line";
+        LoanRequestG: Record "Loan Request"; //SKR 17-01-2023
+        InstalmentLine1: Record "Instalment Detail";
     begin
         if SalCompL.get(GenJnlLine."External Document No.") then begin
             if GenJnlLine."Payroll Jnl. Type" = GenJnlLine."Payroll Jnl. Type"::Salary then begin
@@ -147,6 +152,20 @@ codeunit 50023 "Human Resource Events"
                         if InstalmentLine.FindFirst() then begin
                             InstalmentLine.Status := InstalmentLine.Status::Paid;
                             InstalmentLine.Modify();
+                            LoanRequestG.Reset();
+                            LoanRequestG.SetRange("Loan Request No.", InstalmentLine."Loan Request No.");
+                            if LoanRequestG.FindFirst() then begin
+                                InstalmentLine1.SetRange("Loan Request No.", LoanRequestG."Loan Request No.");
+                                InstalmentLine.SetRange(Status, InstalmentLine1.Status::Unpaid);
+                                if InstalmentLine1.FindSet() then
+                                    repeat
+                                        LoanRequestG."Outstanding Amount" += InstalmentLine1."EMI Amount";
+                                        LoanRequestG.Modify();
+                                    until InstalmentLine1.Next() = 0
+                                else
+                                    LoanRequestG."Outstanding Amount" := 0;
+                                LoanRequestG.Modify();
+                            end;
                         end;
                     until SalaryComputationLine.Next() = 0;
             end;

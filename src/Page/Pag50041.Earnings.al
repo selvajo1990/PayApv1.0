@@ -34,7 +34,7 @@ page 50041 "Earnings"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Type';
                 }
-                field("Applicable for OT"; "Applicable for OT")
+                /*field("Applicable for OT"; "Applicable for OT")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the component is Applicable for OT';
@@ -48,7 +48,7 @@ page 50041 "Earnings"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the OT% for Holidays';
-                }
+                }*/
             }
         }
         area(Factboxes)

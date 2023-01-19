@@ -353,48 +353,20 @@ tableextension 54101 "Employee" extends Employee
         {
             DataClassification = CustomerContent;
             Caption = 'Last Salary Paid Date';
+            Editable = false;
         }
-        /*field(60044; "HR Manager"; Code[20])
+        field(60044; "HR Manager"; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'HR Manager';
             Editable = false;
-            //TableRelation = "Human Resources Setup"."HR Manager";
-
-            trigger OnLookup()
-            var
-                HRSetup: Record "Human Resources Setup";
-                EmployeeL: Record Employee;
-            begin
-                HRSetup.Get();
-                Rec."HR Manager" := HRSetup."HR Manager";
-                EmployeeL.Reset();
-                EmployeeL.SetRange("No.", Rec."HR Manager");
-                if EmployeeL.FindFirst() then
-                    Rec."HR Manager Name" := EmployeeL.FullName();
-            end;
-
-            trigger OnValidate()
-            var
-                EmpL: Record Employee;
-            begin
-                EmpL.Reset();
-                EmpL.SetRange("No.", "HR Manager");
-                if EmpL.FindFirst() then
-                    Rec."HR Manager Name" := EmpL.FullName();
-
-                if Rec."Line Manager" = '' then
-                    Error('Please Enter Mention the Line Manager for the Employee');
-            end;
-        }*/
-        /*field(60045; "HR Manager Name"; Text[30])
+        }
+        field(60045; "HR Manager Name"; Text[30])
         {
             Caption = 'HR Manager Name';
             DataClassification = CustomerContent;
             Editable = false;
-            //FieldClass = FlowField;
-            //CalcFormula = lookup(Employee."First Name" where("No." = field("HR Manager"))) ;
-        }*/
+        }
         field(60046; "Work Location"; Code[10])
         {
             DataClassification = CustomerContent;
@@ -443,7 +415,7 @@ tableextension 54101 "Employee" extends Employee
             DataClassification = ToBeClassified;
         }
 
-        field(60054; "Native Contact No."; Integer)
+        field(60054; "Native Contact No."; Text[30])
         {
             DataClassification = ToBeClassified;
         }
@@ -461,6 +433,12 @@ tableextension 54101 "Employee" extends Employee
             TableRelation = "Insurance Levels";
         }
         // Suganya-aplica
+        field(60058; "Last Salary Increment Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Last Salary Increment Date';
+            Editable = false;
+        }
         modify("Employment Date")
         {
             trigger OnAfterValidate()
@@ -483,14 +461,14 @@ tableextension 54101 "Employee" extends Employee
                     end;
             end;
         }
-        modify(Address)
+        /*modify(Address)
         {
             Caption = 'Country Address';
         }
         modify("Address 2")
         {
             Caption = 'Local Address';
-        }
+        }*/
         modify("Job Title")
         {
             TableRelation = Designation.Description;
@@ -519,6 +497,12 @@ tableextension 54101 "Employee" extends Employee
         DateValidationLbl: Label '%1 should be greater than %2';
         ToDateValidationErr: Label '%1 should not be earlier than %2: %3';
         FromDateValidationErr: Label '%1 should not be earlier than %2: %3';
+        cdeDocNo: Code[20];
+    // added a one function to get No. parameter suganya-m
+    procedure GetDocumentNo(DocumentNo: Code[20])
+    begin
+        cdeDocNo := DocumentNo;
+    end;
 
     procedure CreateUpdateEarningGroupLines(FromDateP: Date)
     var
@@ -526,6 +510,7 @@ tableextension 54101 "Employee" extends Employee
         EmployeeLevelEarningL: Record "Employee Level Earning";
         EmployeeEarningHistoryL: Record "Employee Earning History";
         EmployeeEarningHistory2L: Record "Employee Earning History";
+        SalaryIncLine: Record "Salary Increment Line";
     begin
         EmployeeEarningHistoryL.SetCurrentKey("Employee No.", "From Date");
         EmployeeEarningHistoryL.SetRange("Employee No.", "No.");
@@ -550,16 +535,38 @@ tableextension 54101 "Employee" extends Employee
         EmployeeEarningHistory2L."To Date" := CalcDate('<10Y>', EmployeeEarningHistory2L."From Date");
         EmployeeEarningHistory2L.Insert();
 
-        EarningGroupLineL.SetRange("Group Code", "Earning Group");
-        if EarningGroupLineL.FindSet() then
-            repeat
-                EmployeeLevelEarningL.Init();
-                EmployeeLevelEarningL."Employee No." := "No.";
-                EmployeeLevelEarningL."Group Code" := EarningGroupLineL."Group Code";
-                EmployeeLevelEarningL."From Date" := FromDateP;
-                EmployeeLevelEarningL.Validate("Earning Code", EarningGroupLineL."Earning Code");
-                EmployeeLevelEarningL.Insert();
-            until EarningGroupLineL.Next() = 0;
+        SalaryIncLine.Reset();
+        SalaryIncLine.SetCurrentKey("Document No.", "Employee No.", "Line No.");
+        SalaryIncLine.SetRange("Document No.", cdeDocNo);
+        if not SalaryIncLine.FindFirst() then begin
+            EarningGroupLineL.SetRange("Group Code", "Earning Group");
+            if EarningGroupLineL.FindSet() then
+                repeat
+                    EmployeeLevelEarningL.Init();
+                    EmployeeLevelEarningL."Employee No." := "No.";
+                    EmployeeLevelEarningL."Group Code" := EarningGroupLineL."Group Code";
+                    EmployeeLevelEarningL."From Date" := FromDateP;
+                    EmployeeLevelEarningL."To Date" := CalcDate('<10Y>', EmployeeEarningHistory2L."From Date");
+                    EmployeeLevelEarningL.Validate("Earning Code", EarningGroupLineL."Earning Code");
+                    EmployeeLevelEarningL.Insert();
+                until EarningGroupLineL.Next() = 0;
+        end
+        else begin
+            // suganya-m added a new coding start
+            SalaryIncLine.Reset();
+            SalaryIncLine.SetCurrentKey("Document No.", "Employee No.", "Line No.");
+            SalaryIncLine.SetRange("Document No.", cdeDocNo);
+            if SalaryIncLine.FindSet() then
+                repeat
+                    EmployeeLevelEarningL.Init();
+                    EmployeeLevelEarningL."Employee No." := SalaryIncLine."Employee No.";
+                    EmployeeLevelEarningL."Group Code" := SalaryIncLine."Earning Group Code";
+                    EmployeeLevelEarningL."From Date" := FromDateP;
+                    EmployeeLevelEarningL."To Date" := CalcDate('<10Y>', EmployeeEarningHistory2L."From Date");
+                    EmployeeLevelEarningL.Validate("Earning Code", SalaryIncLine."Earning Code");
+                    EmployeeLevelEarningL.Insert();
+                until SalaryIncLine.Next() = 0; // suganya-m added a new coding end
+        end;
     end;
 
     procedure CreateUpdateAbsenceGroupLine(FromDateP: Date)
@@ -690,10 +697,16 @@ tableextension 54101 "Employee" extends Employee
     trigger OnAfterInsert()
     var
         UserSetup: Record "User Setup";
+        HumanResourcesSetup: Record "Human Resources Setup";
+        EmployeeL: Record Employee;
     begin
         /*UserSetup.Get(UserId);
         Rec."Last User Modified" := UserSetup."User ID";
         Rec.Modify();*/
+        If HumanResourcesSetup.Get("HR Manager") then
+            Rec."HR Manager" := HumanResourcesSetup."HR Manager";
+        if EmployeeL.Get(Rec."HR Manager") then
+            Rec."HR Manager Name" := EmployeeL.FullName();
     end;
 
     trigger OnAfterModify()

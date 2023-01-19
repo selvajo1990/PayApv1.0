@@ -43,6 +43,11 @@ page 50061 "Loan Request List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount';
                 }
+                field("Outstanding Amount"; "Outstanding Amount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Outstanding Amount';
+                }
             }
         }
         area(Factboxes)
@@ -50,4 +55,46 @@ page 50061 "Loan Request List"
 
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action("ESS Loan Request") //SKR 18-01-2023
+            {
+                ApplicationArea = All;
+                Caption = 'ESS Loan Request';
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedCategory = Process;
+                Visible = EssUser;
+                Image = SendApprovalRequest;
+                RunObject = page "Employee Loan Request";
+            }
+        }
+    }
+    var
+        GetEmpNoG: Codeunit "Single Instance";
+        UserSetupG: Record "User Setup";
+        EmpNoG: Code[20];
+        EssUser: Boolean;
+
+    trigger OnOpenPage() //SKR 17-01-2023
+    var
+        GetEmpNo: Codeunit "Single Instance";
+    begin
+        Clear(EssUser);
+        if UserSetupG.Get(UserId) and UserSetupG."Is ESS User" then begin
+            EssUser := true;
+            Clear(EmpNoG);
+            EmpNoG := GetEmpNo.GetEmpNo();
+            Rec.SetRange("Employee No.", EmpNoG);
+        end else
+            EssUser := false;
+    end;
+
+    trigger OnDeleteRecord(): Boolean
+    begin
+        if UserSetupG.Get(UserId) and UserSetupG."Is ESS User" then
+            Rec.Delete(false);
+    end;
 }

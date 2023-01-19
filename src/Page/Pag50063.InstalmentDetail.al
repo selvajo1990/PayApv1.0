@@ -43,6 +43,7 @@ page 50063 "Instalment Detail"
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 ToolTip = 'Executes the Shift Payment action.';
+                Visible = ESSUser;
                 trigger OnAction()
                 begin
                     Rec.ShiftPayment();
@@ -57,6 +58,7 @@ page 50063 "Instalment Detail"
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 ToolTip = 'Executes the Change EMI Amount action.';
+                Visible = ESSUser;
                 trigger OnAction()
                 begin
                     Rec.ChangeEmiAmount();
@@ -71,6 +73,7 @@ page 50063 "Instalment Detail"
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 ToolTip = 'Executes the Change No. of Instalments action.';
+                Visible = ESSUser;
                 trigger OnAction()
                 begin
                     Rec.ChangeInstlaments();
@@ -78,4 +81,15 @@ page 50063 "Instalment Detail"
             }
         }
     }
+    var
+        UserSetup: Record "User Setup";
+        ESSUser: Boolean;
+
+    trigger OnOpenPage()
+    begin
+        Clear(ESSUser);
+        if UserSetup.Get(UserId) and UserSetup."Is ESS User" then
+            ESSUser := false else
+            ESSUser := true;
+    end;
 }

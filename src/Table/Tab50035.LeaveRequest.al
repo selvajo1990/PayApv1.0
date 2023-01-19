@@ -95,12 +95,12 @@ table 50035 "Leave Request"
                     Error(StartDateErr, FieldCaption("Start Date"), EmployeeL.FieldCaption("Employment Date"), EmployeeL."Employment Date");
                 if (EmployeeL."Termination Date" < "Start Date") and (EmployeeL."Termination Date" > 0D) then
                     Error(EmployeeTerminatedErr, EmployeeL."No.");
-                PayPeriodLineL.Reset();
+                /*PayPeriodLineL.Reset();
                 PayPeriodLineL.Setfilter("Period Start Date", '<=%1', "Start Date");
                 PayPeriodLineL.SetFilter("Period End Date", '>=%1', "Start Date");
                 PayPeriodLineL.SetRange(Status, PayPeriodLineL.Status::Closed);
                 if PayPeriodLineL.FindFirst() then
-                    Error(PayPeriodDateErr, PayPeriodLineL."Pay Period");
+                    Error(PayPeriodDateErr, PayPeriodLineL."Pay Period");*/ //Command By SKR 19-01-2023
                 if ("Start Date" <> xrec."Start Date") and (CurrFieldNo = FieldNo("Start Date")) and (xrec."Start Date" > 0D) then
                     OnLookupAbsenceCode();
                 CalculateLeaveDays();

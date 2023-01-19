@@ -42,10 +42,15 @@ page 60175 "Employee Login"
             Error('Provide both Employee No. & Password to continue');
 
         EmployeeL.Reset();
-        EmployeeL.SetRange("No.", EmployeeNoG);
-        EmployeeL.SetRange(Password, PasswordG);
-        if not EmployeeL.FindFirst() then
+        //EmployeeL.SetRange("No.", EmployeeNoG);
+        //EmployeeL.SetRange(Password, PasswordG);
+        //if not EmployeeL.FindFirst() then
+        if EmployeeL.Get(EmployeeNoG) and (EmployeeL.Password <> PasswordG) then
+            //if EmployeeL.FindFirst() then begin
+            //if PasswordG <> EmployeeL.Password then
             Error('Please Enter the correct Password to continue');
+        //end;
+
 
         GetEpmNoCU.SetEmpNo(EmployeeNoG);
         exit(true);

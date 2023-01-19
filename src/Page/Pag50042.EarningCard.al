@@ -115,7 +115,7 @@ page 50042 "Earning Card"
                     Visible = false;
                     ToolTip = 'Specifies the value of the Pay With Salary';
                 }
-                field("Applicable for OT"; "Applicable for OT")
+                /*field("Applicable for OT"; "Applicable for OT")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Applicable for OT';
@@ -129,7 +129,7 @@ page 50042 "Earning Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the OT% for Holidays';
-                }
+                }*/
             }
             group(Computation)
             {
